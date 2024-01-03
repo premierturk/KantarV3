@@ -1,0 +1,4 @@
+owner: premierturk
+repo: KantarV3
+provider: github
+updaterCacheDirName: kantar-electron-updater

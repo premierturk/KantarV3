@@ -31,7 +31,7 @@ import { NavRightComponent } from './theme/layout/admin/nav-bar/nav-right/nav-ri
 import '@progress/kendo-angular-intl/locales/tr/all';
 import '@progress/kendo-angular-intl/locales/tr/calendar';
 import { UpdateModalComponent } from './ui/update-modal/update-modal.component';
-
+import { OfflineRequestsComponent } from './ui/offline-requests/offline-requests.component';
 
 
 
@@ -53,7 +53,8 @@ registerLocaleData(LocaleTr);
     NavItemComponent,
     NavBarComponent,
     ConfigurationComponent,
-    UpdateModalComponent
+    UpdateModalComponent,
+    OfflineRequestsComponent
     
   ],
   imports: [

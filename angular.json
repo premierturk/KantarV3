@@ -1,5 +1,8 @@
 {
   "$schema": "./node_modules/@angular/cli/lib/config/schema.json",
+  "cli": {
+    "analytics": false
+  },
   "version": 1,
   "newProjectRoot": "projects",
   "projects": {
@@ -8,6 +11,12 @@
       "schematics": {
         "@schematics/angular:component": {
           "style": "scss"
+        },
+        "@schematics/angular:application": {
+          "strict": true
+        },
+        "i18n": {
+          "sourceLocale": "tr-TR"
         }
       },
       "root": "",
@@ -17,12 +26,11 @@
         "build": {
           "builder": "@angular-devkit/build-angular:browser",
           "options": {
-            "outputPath": "dist/kantar_electron",
+            "outputPath": "out/kantar_electron",
             "index": "src/index.html",
             "main": "src/main.ts",
             "polyfills": "src/polyfills.ts",
             "tsConfig": "tsconfig.app.json",
-            "inlineStyleLanguage": "scss",
             "assets": [
               "src/favicon.ico",
               "src/assets"
@@ -67,9 +75,11 @@
           "builder": "@angular-devkit/build-angular:dev-server",
           "configurations": {
             "production": {
+              "proxyConfig": "src/proxy.conf.json",
               "browserTarget": "kantar_electron:build:production"
             },
             "development": {
+              "proxyConfig": "src/proxy.conf.json",
               "browserTarget": "kantar_electron:build:development"
             }
           },

@@ -9,6 +9,7 @@ import * as moment from 'moment';
 import { AppNetworkStatus } from 'src/app/network-status';
 import * as Notiflix from 'node_modules/notiflix/dist/notiflix-3.2.6.min.js';
 import Swal from 'sweetalert2';
+import { DropDownFilterSettings } from '@progress/kendo-angular-dropdowns';
 
 @Component({
   selector: 'app-dashboard',
@@ -20,7 +21,10 @@ export class DashboardComponent implements OnInit {
   @ViewChild('grid') grid: GridComponent;
   public view: GridDataResult;
   public list: any[] = [];
+  public tasimaKabulListesi: any[] = [];
   public mySelections: any[] = [];
+  public Plakalar: any[] = [];
+  public Firmalar: any[] = [];
   public selectedItem: any = {};
   static componentInstance: any;
   private url: string = environment.production ? environment.apiUrl : '/api';
@@ -68,9 +72,6 @@ export class DashboardComponent implements OnInit {
     if (event.key == 'Enter') {
       console.log(this.barcode);
       var belgeNo = this.belgeNoFromBarcode(this.barcode);
-      // var index=belgeNo.indexOf("A")+1;
-      // var lastindex=belgeNo.lastIndexOf("A");
-      // var belge=belgeNo.substring(index,lastindex);
 
 
       this.barcode = '';
@@ -82,30 +83,26 @@ export class DashboardComponent implements OnInit {
   public async belgeNoFromBarcode(code) {
     var barkodBelge = code.replaceAll('Shift', '').replaceAll('Control', '').replaceAll('*', '-');
     this.formData.BelgeNo = barkodBelge;
-
-    var tasimaKabulKontrol = await this.ds.postNoMess(`${this.url}/kantar/KabulBelgesiKontrol`, { BelgeNo: barkodBelge, BarkodNo: barkodBelge });
-    if (tasimaKabulKontrol.success == true) {
-      if (tasimaKabulKontrol.data.Aktif == false) {
-        Notiflix.Notify.failure('Taşıma Kabul Belgesi Aktif Değildir!');
-        return;
-      }
-      else {
-        this.ddPlaka.f_list = this.ddPlaka.list.filter(x => tasimaKabulKontrol.data.Araclar.some(a => a.PlakaNo == x.PlakaNo))
-        this.formData.FirmaAdi = tasimaKabulKontrol.data.FirmaAdi;
-        this.formData.Dara = 0;
+    var tasimaKabulKontrol=this.tasimaKabulListesi.filter(x=>x.BelgeNo==barkodBelge)[0];
+    
+    if (tasimaKabulKontrol != undefined) {
+      
+        this.ddPlaka.f_list = this.ddPlaka.list.filter(x => tasimaKabulKontrol.IlceBelediyeler_TasimaKabul_Araclar.some(a => a.PlakaNo == x.PlakaNo))
+        this.formData.FirmaAdi = tasimaKabulKontrol.AnaTasiyiciFirma;
+        this.formData.Dara = 0; 
         this.formData.AracId = undefined;
 
         setTimeout(() => {
           this.save();
-        }, 2000);
+        }, 3000);
 
         return barkodBelge;
+      
       }
-    }
     else {
+      this.formData.FirmaAdi='';
       Notiflix.Notify.failure('Geçersiz Belge No!');
     }
-
   }
 
   public plakaChange(aracId) {
@@ -116,30 +113,30 @@ export class DashboardComponent implements OnInit {
 
       setTimeout(() => {
         this.save();
-      }, 2000);
+      }, 3000);
 
     }
   }
 
   public async BindForm() {
     this.ddPlaka = new DropdownProps("PlakaNo", await this.ds.get(`${this.url}/kantar/araclistesi?EtiketNo=`));
-    this.ddFirma = new DropdownProps("FirmaAdi", await this.ds.get(`${this.url}/FirmaListesiMini?BuyukSehirId=1`));
+    this.ddFirma = new DropdownProps("FirmaAdi", await this.ds.get(`${this.url}/FirmaListesiByCariHesapTuru`));
+    this.tasimaKabulListesi = await this.ds.get(`${this.url}/SahaIsletmeciEntegrasyon/TasimaKabulListesi?isAktif=true`);
   }
 
 
   public async BindGrid() {
-
+    if (this.formData.firmaId == undefined) {
+      this.formData.firmaId = "";
+    }
     this.clearSelections();
-
     if (this.basTar != undefined && this.bitTar != undefined) {
-      var query = this.user.buyuksehirid + "#" + this.basTar.toUTCString() + "#" + this.bitTar.toUTCString() + "#" + "" + "#" + this.depolamaAlanId + "#" + "" + "#" + this.raporTuru.kamufis + "#" + this.raporTuru.dokumfisi + "#" + this.raporTuru.ozel + "#" + this.raporTuru.manueldokum + "#" + this.raporTuru.gerikazanim + "#" + "Hayir" + "#" + this.raporTuru.evsel + "#" + this.raporTuru.sanayi + "#" + this.user.userid;
+      var query = this.user.buyuksehirid + "#" + this.basTar.toUTCString() + "#" + this.bitTar.toUTCString() + "#" + this.formData.firmaId + "#" + this.depolamaAlanId + "#" + "" + "#" + this.raporTuru.kamufis + "#" + this.raporTuru.dokumfisi + "#" + this.raporTuru.ozel + "#" + this.raporTuru.manueldokum + "#" + this.raporTuru.gerikazanim + "#" + "Hayir" + "#" + this.raporTuru.evsel + "#" + this.raporTuru.sanayi + "#" + this.user.userid;
 
       this.list = await this.ds.get(`${this.url}/ParaYukleme/GetRaporMulti?q=${btoa(query)}`);
       this.view = process(this.list, this.state);
       this.total = aggregateBy(this.list, [{ field: 'Tonaj', aggregate: 'sum' }, { field: 'Tutar', aggregate: 'sum' }]);
     }
-
-
   }
 
   public initializeFormData() {
@@ -197,7 +194,7 @@ export class DashboardComponent implements OnInit {
     component.ref.detectChanges();
     setTimeout(() => {
       component.save();
-    }, 2000);
+    }, 3000);
   }
 
 
@@ -245,20 +242,22 @@ export class DashboardComponent implements OnInit {
   }
 
   async save() {
+    this.formData.IsOffline = AppNetworkStatus.isOffline;
+
     var err = this.validations();
     if (err != '') {
 
       Notiflix.Notify.failure(err);
       return;
     }
-    else if (this.isLoading==false) {
+    else if (this.isLoading == false) {
       this.isLoading = true;
       var result = await this.ds.post(`${this.url}/kantar/hafriyatkabul/KabulBelgesi`, { AracId: this.formData.AracId, FirmaId: null, SahaId: null, UserId: this.user.userid, BelgeNo: this.formData.BelgeNo, BarkodNo: this.formData.BelgeNo, DepolamaAlanId: this.depolamaAlanId, Tonaj: this.formData.Tonaj, Dara: this.formData.Dara, GirisCikis: 'Giriş' });
       this.isLoading = false;
       if (result.success) {
         if (this._electronService.ipcRenderer)
           this._electronService.ipcRenderer.send('bariyer');
-        // this.print(result.data);
+        this.print(result.data);
         this.initializeFormData();
         this.BindGrid();
       }
@@ -270,12 +269,37 @@ export class DashboardComponent implements OnInit {
     var s = '';
     if (this.formData.AracId == null) s = 'Lütfen plaka seçin.';
     else if (this.formData.FirmaAdi == null) s = 'Firma Adı bulunamadı.';
-    else if (this.formData.BelgeNo == null || this.formData.BelgeNo=='') s = 'Barkod Okutunuz.';
+    else if (this.formData.BelgeNo == null || this.formData.BelgeNo == '') s = 'Barkod Okutunuz.';
     else if (this.formData.Dara == null || this.formData.Dara < 1) s = 'Dara bulunamadı.';
     else if (this.formData.Tonaj == null || this.formData.Tonaj < 1) s = 'Tonaj bulunamadı.';
     else if (this.formData.Tonaj < this.formData.Dara && this.formData.Tonaj > 1) s = 'Dara Tonajdan büyük olamaz.';
     return s;
   }
+  public filterSettings: DropDownFilterSettings = {
+    caseSensitive: false,
+    operator: "startsWith",
+  };
+
+  public handleFilter(value, dropdownName) {
+    if (dropdownName == 'Plaka') {
+      if (value.length < 1) {
+        this.Plakalar = [];
+      }
+      else {
+        this.Plakalar = this.ddPlaka.f_list;
+      }
+    }
+    else {
+      if (value.length < 1) {
+        this.Firmalar = [];
+      }
+      else {
+        this.Firmalar = this.ddFirma.f_list;
+      }
+    }
+
+  }
+
 }
 
 
@@ -297,3 +321,6 @@ class DropdownProps {
 
 
 }
+
+
+

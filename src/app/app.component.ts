@@ -8,7 +8,9 @@ import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import { ConnectionService } from 'ng-connection-service';
 import * as Notiflix from 'notiflix';
 import { UpdateModalComponent } from './ui/update-modal/update-modal.component';
-
+import { OfflineRequestsComponent } from './ui/offline-requests/offline-requests.component';
+import { DashboardComponent } from './ui/dashboard/dashboard.component';
+import { AppNetworkStatus } from './network-status';
 
 @Component({
   selector: 'app-root',
@@ -33,9 +35,36 @@ export class AppComponent implements OnInit {
       this._electronService.ipcRenderer.on('DepolamaAlanId', (event, data) => window.localStorage.setItem("DepolamaAlanId", data));
       this._electronService.ipcRenderer.on('basarili', (event, data) => Notiflix.Notify.success(data));
     }
+    window.addEventListener("online", () => {
+      setTimeout(() => {
+        AppNetworkStatus.isOffline = false;
+        this.checkOfflineRequests();
+      }, 2000);
+    });
+
+    window.addEventListener("offline", () => {
+      AppNetworkStatus.isOffline = true
+    });
+    this.checkOfflineRequests();
 
   }
 
+
+  checkOfflineRequests() {
+    if (!AppNetworkStatus.isOffline) {
+      var s = window.localStorage.getItem("offlineRequests");
+      if (s == null) return;
+
+      var list = JSON.parse(s);
+      if (list.length == 0) return;
+
+      const modalRef = this.help.openModal(this.modalService, OfflineRequestsComponent);
+      modalRef.result.then(() => {
+        DashboardComponent.componentInstance.ngOnInit();
+
+      });
+    }
+  }
 
   ngOnInit() {
     const userStorage = JSON.parse(window.localStorage.getItem('user'));

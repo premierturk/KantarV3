@@ -9,7 +9,6 @@ const net = require('net');
 var nrc = require("node-run-cmd");
 
 
-
 class AppFiles {
   static kantarConfigs = `kantarConfigs.json`;
   static kantarName = "C:\\HybsKantarName.json";
@@ -40,10 +39,12 @@ function onReady() {
         enableRemoteModule: true,
         backgroundThrottling: false,
         preload: path.join(__dirname, "preload.js"),
-      }
+      },
+      icon: path.join(__dirname, "assets/icon.ico"),
     }
   )
   mainWindow.setMenu(null)
+  mainWindow.setTitle("Izmir Kantar v" + app.getVersion());
 
   new Shortcut("Ctrl+F12", function (e) {
     mainWindow.webContents.openDevTools();
@@ -56,13 +57,13 @@ function onReady() {
     port.open(function (err) {
       if (err) {
         console.log("Error opening port: " + err.messages)
-        // return printToAngular("Error opening port: ", err.message);
+        return printToAngular("Error opening port: ", err.message);
       }
     });
 
     port.on("error", function (err) {
       console.log("Error: " + err.messages)
-      // printToAngular("Error: ", err.message);
+      printToAngular("Error: ", err.message);
     });
 
     var currMessage = "";
@@ -74,7 +75,7 @@ function onReady() {
       printToAngular("String Data =>" + currMessage);
 
       if (
-        // (currMessage.endsWith("\r"))
+        // (currMessage.endsWith("\r") || currMessage.endsWith("\\r")) && currMessage.startsWith("@")
         true
       ) {
         currMessage = currMessage
@@ -112,7 +113,7 @@ function onReady() {
   if (args.includes("serve")) {
     mainWindow.loadURL("http://localhost:4200");
   } else {
-    mainWindow.loadURL(`file://${__dirname}/dist/kantar_electron/index.html`);
+    mainWindow.loadURL(`file://${__dirname}/out/kantar_electron/index.html`);
   }
 
   var server = net.createServer();
@@ -124,11 +125,11 @@ function onReady() {
 
 
   setTimeout(() => {
+    autoUpdater.checkForUpdates();
     mainWindow.webContents.send("KantarId", config.kantarId);
     mainWindow.webContents.send("KantarAdi", config.kantarAdi);
     mainWindow.webContents.send("DepolamaAlanId", config.depolamaAlanId);
   }, 4000);
-
 }
 
 app.on("window-all-closed", function () {
@@ -214,8 +215,6 @@ autoUpdater.on("error", (message) => {
 function printToAngular(message) {
   mainWindow.webContents.send("print", message);
 }
-
-
 
 
 function handleConnection(conn) {

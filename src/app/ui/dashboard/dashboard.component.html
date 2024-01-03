@@ -71,16 +71,18 @@
                         <i class="fa-print far fas pr-2"></i>Yazdır
                     </button>
                 </div>
-            </div> 
+            </div>   
             <div class="col-md-4 p-0">
                 <div class="row">
                     <div class="col-md-2 mt-1 p-0">
                         <span>Firma Adı : </span>
-                    </div>
+                    </div> 
                     <div class="col-md-9 ml-2  p-0">
-                        <kendo-dropdownlist [size]="'small'" [popupSettings]="{ appendTo: 'component' }" [filterable]="true"
-                        class="width" [data]="ddFirma.f_list" [textField]="ddFirma.displayField" [valueField]="'FirmaId'"
-                        (filterChange)="ddFirma.onChange($event)" [valuePrimitive]="true">
+                        <kendo-dropdownlist [size]="'small'" [kendoDropDownFilter]="filterSettings" [popupSettings]="{ appendTo: 'component' }" [filterable]="true"
+                        class="width" [data]="Firmalar" [textField]="ddFirma.displayField" [valueField]="'FirmaId'" [(ngModel)]="formData.firmaId"
+                        (filterChange)="handleFilter($event,'Firma')" [valuePrimitive]="true" (valueChange)="BindGrid()" [defaultItem]="{
+                            FirmaAdi: 'TÜM FİRMALAR'
+                          }">
                     </kendo-dropdownlist>
                     </div>
                 </div>
@@ -149,9 +151,10 @@
         <div class="modal-body" style="padding: 5px">
             <div class="mb-2">
                 <label>Plaka</label>
-                <kendo-dropdownlist [size]="'small'" [popupSettings]="{ appendTo: 'component' }" [filterable]="true"
-                    class="width" [data]="ddPlaka.f_list" [textField]="ddPlaka.displayField" [valueField]="'AracId'"
-                    (filterChange)="ddPlaka.onChange($event)" [valuePrimitive]="true" [(ngModel)]="formData.AracId"
+
+                <kendo-dropdownlist [size]="'small'"  [kendoDropDownFilter]="filterSettings" [popupSettings]="{ appendTo: 'component' }" [filterable]="true"
+                    class="width" [data]="Plakalar" [textField]="ddPlaka.displayField" [valueField]="'AracId'"
+                    (filterChange)="handleFilter($event,'Plaka')" [valuePrimitive]="true" [(ngModel)]="formData.AracId"
                     (valueChange)="plakaChange($event)">
                 </kendo-dropdownlist>
 
