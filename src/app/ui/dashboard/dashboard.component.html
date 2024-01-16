@@ -24,37 +24,40 @@
         </div>
         <div class="row m-0 pb-2 pt-1">
             <div class="ml-5">
-                <input type="checkbox" [(ngModel)]="raporTuru.kamufis" #kamufisi kendoCheckBox />
+                <input type="checkbox" [(ngModel)]="raporTuru.kamufis" #kamufisi kendoCheckBox (change)="BindGrid()" />
                 <kendo-label class="k-checkbox-label" [for]="kamufisi" text="Kamu Fişi"></kendo-label>
             </div>
 
             <div class="ml-5">
-                <input type="checkbox" [(ngModel)]="raporTuru.dokumfisi" #dokumfisi kendoCheckBox />
+                <input type="checkbox" [(ngModel)]="raporTuru.dokumfisi" #dokumfisi kendoCheckBox
+                    (change)="BindGrid()" />
                 <kendo-label class="k-checkbox-label" [for]="dokumfisi" text="Döküm Fişi"></kendo-label>
             </div>
 
             <div class="ml-5">
-                <input type="checkbox" [(ngModel)]="raporTuru.ozel" #ozel kendoCheckBox />
+                <input type="checkbox" [(ngModel)]="raporTuru.ozel" #ozel kendoCheckBox (change)="BindGrid()" />
                 <kendo-label class="k-checkbox-label" [for]="ozel" text="Özel"></kendo-label>
             </div>
 
             <div class="ml-5">
-                <input type="checkbox" [(ngModel)]="raporTuru.evsel" #evsel kendoCheckBox />
+                <input type="checkbox" [(ngModel)]="raporTuru.evsel" #evsel kendoCheckBox (change)="BindGrid()" />
                 <kendo-label class="k-checkbox-label" [for]="evsel" text="Evsel"></kendo-label>
             </div>
 
             <div class="ml-5">
-                <input type="checkbox" [(ngModel)]="raporTuru.sanayi" #sanayi kendoCheckBox />
+                <input type="checkbox" [(ngModel)]="raporTuru.sanayi" #sanayi kendoCheckBox (change)="BindGrid()" />
                 <kendo-label class="k-checkbox-label" [for]="sanayi" text="Sanayi"></kendo-label>
             </div>
 
             <div class="ml-5">
-                <input type="checkbox" [(ngModel)]="raporTuru.manueldokum" #manueldokum kendoCheckBox />
+                <input type="checkbox" [(ngModel)]="raporTuru.manueldokum" #manueldokum kendoCheckBox
+                    (change)="BindGrid()" />
                 <kendo-label class="k-checkbox-label" [for]="manueldokum" text="Manuel Döküm"></kendo-label>
             </div>
 
             <div class="ml-5">
-                <input type="checkbox" [(ngModel)]="raporTuru.gerikazanim" #gerikazanim kendoCheckBox />
+                <input type="checkbox" [(ngModel)]="raporTuru.gerikazanim" #gerikazanim kendoCheckBox
+                    (change)="BindGrid()" />
                 <kendo-label class="k-checkbox-label" [for]="gerikazanim" text="Geri Kazanım"></kendo-label>
             </div>
         </div>
@@ -65,25 +68,27 @@
                         <i class="fa-file-excel far fas pr-2"></i>Excel
                     </button>
                 </div>
-    
-                <div class="col-md-6 col-lg-4  col-xl-3 col-sm-5 text-center p-0">
+
+                <!-- <div class="col-md-6 col-lg-4  col-xl-3 col-sm-5 text-center p-0">
                     <button class="col-md-10 btn btn-secondary text-nowrap" (click)="print(selectedItem)">
                         <i class="fa-print far fas pr-2"></i>Yazdır
                     </button>
-                </div>
-            </div>   
+                </div> -->
+            </div>
             <div class="col-md-4 p-0">
                 <div class="row">
                     <div class="col-md-2 mt-1 p-0">
                         <span>Firma Adı : </span>
-                    </div> 
+                    </div>
                     <div class="col-md-9 ml-2  p-0">
-                        <kendo-dropdownlist [size]="'small'" [kendoDropDownFilter]="filterSettings" [popupSettings]="{ appendTo: 'component' }" [filterable]="true"
-                        class="width" [data]="Firmalar" [textField]="ddFirma.displayField" [valueField]="'FirmaId'" [(ngModel)]="formData.firmaId"
-                        (filterChange)="handleFilter($event,'Firma')" [valuePrimitive]="true" (valueChange)="BindGrid()" [defaultItem]="{
+                        <kendo-dropdownlist [size]="'small'" [kendoDropDownFilter]="filterSettings"
+                            [popupSettings]="{ appendTo: 'component' }" [filterable]="true" class="width"
+                            [data]="ddFirma.f_list" [textField]="ddFirma.displayField" [valueField]="'FirmaId'"
+                            [(ngModel)]="formData.firmaId" (filterChange)="handleFilter($event,'Firma')"
+                            [valuePrimitive]="true" (valueChange)="BindGrid()" [defaultItem]="{
                             FirmaAdi: 'TÜM FİRMALAR'
                           }">
-                    </kendo-dropdownlist>
+                        </kendo-dropdownlist>
                     </div>
                 </div>
             </div>
@@ -152,8 +157,9 @@
             <div class="mb-2">
                 <label>Plaka</label>
 
-                <kendo-dropdownlist [size]="'small'"  [kendoDropDownFilter]="filterSettings" [popupSettings]="{ appendTo: 'component' }" [filterable]="true"
-                    class="width" [data]="Plakalar" [textField]="ddPlaka.displayField" [valueField]="'AracId'"
+                <kendo-dropdownlist [size]="'small'" [kendoDropDownFilter]="filterSettings"
+                    [popupSettings]="{ appendTo: 'component' }" [filterable]="true" class="width"
+                    [data]="ddPlaka.f_list" [textField]="ddPlaka.displayField" [valueField]="'AracId'"
                     (filterChange)="handleFilter($event,'Plaka')" [valuePrimitive]="true" [(ngModel)]="formData.AracId"
                     (valueChange)="plakaChange($event)">
                 </kendo-dropdownlist>

@@ -4,7 +4,7 @@
   "description": "KantarV3",
   "author": "premierturk",
   "license": "CC0-1.0",
-  "version": "1.0.1",
+  "version": "1.0.2",
   "main": "main.js",
   "scripts": {
     "start": "ng serve --proxy-config src/proxy.conf.json",
@@ -47,7 +47,7 @@
     },
     "extraFiles": [
       "./kantarConfigs.json",
-      "./fis/**"
+      "./antenConfigTools/**"
     ]
   },
   "private": true,

@@ -1,18 +1,66 @@
 {
-    "debugKantar": {
-      "kantarId": 1,
-      "depolamaAlanId":1,
-      "kantarAdi": "DEBUG Kantar",
-      "kantar": true,
-      "printerName": "EPSON LX-350",
-      "isPrinterOn": false,
-      "serialPort": {
-        "path": "COM4",
-        "autoOpen": false,
-        "baudRate": 9600,
-        "dataBits": 8,
-        "parity": "none"
-      }
+  "debugKantar": {
+    "kantarId": 1,
+    "depolamaAlanId": 1,
+    "kantarAdi": "DEBUG Kantar",
+    "kantarMarka": "tartanTarim",
+    "kantar": true,
+    "printerName": "EPSON LX-350",
+    "isPrinterOn": false,
+    "serialPort": {
+      "path": "COM14",
+      "autoOpen": false,
+      "baudRate": 9600,
+      "dataBits": 8,
+      "parity": "none"
     }
-    
+  },
+  "sunay": {
+    "kantarId": 1,
+    "depolamaAlanId": 1,
+    "kantarAdi": "Özcan SUNAY",
+    "kantarMarka": "tartanTarim",
+    "kantar": true,
+    "printerName": "",
+    "isPrinterOn": false,
+    "serialPort": {
+      "path": "COM1",
+      "autoOpen": false,
+      "baudRate": 9600,
+      "dataBits": 8,
+      "parity": "none"
+    }
+  },
+  "eminOgullari": {
+    "kantarId": 1,
+    "depolamaAlanId": 1,
+    "kantarAdi": "EMİNOĞULLARI HAFRİYAT GERİ DÖNÜŞÜM",
+    "kantarMarka": "netKantar",
+    "kantar": true,
+    "printerName": "",
+    "isPrinterOn": false,
+    "serialPort": {
+      "path": "COM2",
+      "autoOpen": false,
+      "baudRate": 9600,
+      "dataBits": 8,
+      "parity": "none"
+    }
+  },
+  "ozenTas": {
+    "kantarId": 1,
+    "depolamaAlanId": 1,
+    "kantarAdi": "ÖZEN-TAŞ HAFRİYAT",
+    "kantarMarka": "ideKantar",
+    "kantar": true,
+    "printerName": "EPSON LX-350",
+    "isPrinterOn": false,
+    "serialPort": {
+      "path": "COM1",
+      "autoOpen": false,
+      "baudRate": 9600,
+      "dataBits": 8,
+      "parity": "none"
+    }
   }
+}

@@ -23,8 +23,8 @@ export class DashboardComponent implements OnInit {
   public list: any[] = [];
   public tasimaKabulListesi: any[] = [];
   public mySelections: any[] = [];
-  public Plakalar: any[] = [];
-  public Firmalar: any[] = [];
+  // public Plakalar: any[] = [];
+  // public Firmalar: any[] = [];
   public selectedItem: any = {};
   static componentInstance: any;
   private url: string = environment.production ? environment.apiUrl : '/api';
@@ -37,7 +37,7 @@ export class DashboardComponent implements OnInit {
   public bitTar: Date;
   public barcode: string = '';
   public isLoading: boolean = false;
-  public raporTuru: any = { kamufis: false, dokumfisi: false, ozel: false, manueldokum: false, gerikazanim: false, evsel: false, sanayi: false };
+  public raporTuru: any = { kamufis: true, dokumfisi: true, ozel: true, manueldokum: true, gerikazanim: true, evsel: true, sanayi: true };
   public user = JSON.parse(window.localStorage.getItem('user'));
   public depolamaAlanId = window.localStorage.getItem('DepolamaAlanId');
   public state: State = {
@@ -71,7 +71,7 @@ export class DashboardComponent implements OnInit {
   keyEvent(event: KeyboardEvent) {
     if (event.key == 'Enter') {
       console.log(this.barcode);
-      var belgeNo = this.belgeNoFromBarcode(this.barcode);
+      this.belgeNoFromBarcode(this.barcode);
 
 
       this.barcode = '';
@@ -81,27 +81,27 @@ export class DashboardComponent implements OnInit {
   }
 
   public async belgeNoFromBarcode(code) {
-    var barkodBelge = code.replaceAll('Shift', '').replaceAll('Control', '').replaceAll('*', '-');
-    this.formData.BelgeNo = barkodBelge;
-    var tasimaKabulKontrol=this.tasimaKabulListesi.filter(x=>x.BelgeNo==barkodBelge)[0];
-    
-    if (tasimaKabulKontrol != undefined) {
-      
-        this.ddPlaka.f_list = this.ddPlaka.list.filter(x => tasimaKabulKontrol.IlceBelediyeler_TasimaKabul_Araclar.some(a => a.PlakaNo == x.PlakaNo))
-        this.formData.FirmaAdi = tasimaKabulKontrol.AnaTasiyiciFirma;
-        this.formData.Dara = 0; 
-        this.formData.AracId = undefined;
+    var barkodBelge = code.replaceAll('Shift', '').replaceAll('Control', '').replaceAll('*', '-').replaceAll(',000026', '');
+    //this.formData.BelgeNo = barkodBelge;
+    var tasimaKabulKontrol = this.tasimaKabulListesi.filter(x => x.BelgeNo == barkodBelge)[0];
 
-        setTimeout(() => {
-          this.save();
-        }, 3000);
+    if (tasimaKabulKontrol != undefined && tasimaKabulKontrol != null) {
+      this.formData.BelgeNo = barkodBelge;
+      this.ddPlaka.f_list = this.ddPlaka.list.filter(x => tasimaKabulKontrol.IlceBelediyeler_TasimaKabul_Araclar.some(a => a.PlakaNo == x.PlakaNo))
+      this.formData.FirmaAdi = tasimaKabulKontrol.AnaTasiyiciFirma;
+      this.formData.Dara = 0;
+      this.formData.AracId = undefined;
 
-        return barkodBelge;
-      
-      }
+      setTimeout(() => {
+        this.save();
+      }, 3000);
+
+      return barkodBelge;
+
+    }
     else {
-      this.formData.FirmaAdi='';
-      Notiflix.Notify.failure('Geçersiz Belge No!');
+      this.formData.FirmaAdi = '';
+      //Notiflix.Notify.failure('Geçersiz Belge No!');
     }
   }
 
@@ -283,18 +283,18 @@ export class DashboardComponent implements OnInit {
   public handleFilter(value, dropdownName) {
     if (dropdownName == 'Plaka') {
       if (value.length < 1) {
-        this.Plakalar = [];
+        this.ddPlaka.f_list = [];
       }
       else {
-        this.Plakalar = this.ddPlaka.f_list;
+        this.ddPlaka.f_list = this.ddPlaka.f_list;
       }
     }
     else {
       if (value.length < 1) {
-        this.Firmalar = [];
+        this.ddFirma.f_list = [];
       }
       else {
-        this.Firmalar = this.ddFirma.f_list;
+        this.ddFirma.f_list = this.ddFirma.f_list;
       }
     }
 
