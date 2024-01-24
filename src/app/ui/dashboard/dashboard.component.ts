@@ -81,7 +81,7 @@ export class DashboardComponent implements OnInit {
   }
 
   public async belgeNoFromBarcode(code) {
-    var barkodBelge = code.replaceAll('Shift', '').replaceAll('Control', '').replaceAll('*', '-').replaceAll(',000026', '');
+    var barkodBelge = code.replaceAll('Shift', '').replaceAll('Control', '').replaceAll('/', '-').replaceAll('*', '-').replaceAll(',000026', '');
     //this.formData.BelgeNo = barkodBelge;
     var tasimaKabulKontrol = this.tasimaKabulListesi.filter(x => x.BelgeNo == barkodBelge)[0];
 
@@ -92,9 +92,9 @@ export class DashboardComponent implements OnInit {
       this.formData.Dara = 0;
       this.formData.AracId = undefined;
 
-      setTimeout(() => {
-        this.save();
-      }, 3000);
+      // setTimeout(() => {
+      //   this.save();
+      // }, 3000);
 
       return barkodBelge;
 
@@ -111,9 +111,9 @@ export class DashboardComponent implements OnInit {
       this.formData.AracId = arac.AracId;
       this.formData.Dara = arac.Dara;
 
-      setTimeout(() => {
-        this.save();
-      }, 3000);
+      // setTimeout(() => {
+      //   this.save();
+      // }, 3000);
 
     }
   }
@@ -192,9 +192,9 @@ export class DashboardComponent implements OnInit {
     const component = DashboardComponent.componentInstance;
     component.formData.Tonaj = parseInt(data[0]);
     component.ref.detectChanges();
-    setTimeout(() => {
-      component.save();
-    }, 3000);
+    // setTimeout(() => {
+    //   component.save();
+    // }, 3000);
   }
 
 

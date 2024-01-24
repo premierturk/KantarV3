@@ -33,7 +33,7 @@
   },
   "eminOgullari": {
     "kantarId": 1,
-    "depolamaAlanId": 1,
+    "depolamaAlanId": 198,
     "kantarAdi": "EMİNOĞULLARI HAFRİYAT GERİ DÖNÜŞÜM",
     "kantarMarka": "netKantar",
     "kantar": true,
@@ -49,7 +49,7 @@
   },
   "ozenTas": {
     "kantarId": 1,
-    "depolamaAlanId": 1,
+    "depolamaAlanId": 85,
     "kantarAdi": "ÖZEN-TAŞ HAFRİYAT",
     "kantarMarka": "ideKantar",
     "kantar": true,

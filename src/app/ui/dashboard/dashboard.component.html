@@ -84,7 +84,7 @@
                         <kendo-dropdownlist [size]="'small'" [kendoDropDownFilter]="filterSettings"
                             [popupSettings]="{ appendTo: 'component' }" [filterable]="true" class="width"
                             [data]="ddFirma.f_list" [textField]="ddFirma.displayField" [valueField]="'FirmaId'"
-                            [(ngModel)]="formData.firmaId" (filterChange)="handleFilter($event,'Firma')"
+                            [(ngModel)]="formData.firmaId" (filterChange)="ddFirma.onChange($event)"
                             [valuePrimitive]="true" (valueChange)="BindGrid()" [defaultItem]="{
                             FirmaAdi: 'TÜM FİRMALAR'
                           }">
@@ -160,7 +160,7 @@
                 <kendo-dropdownlist [size]="'small'" [kendoDropDownFilter]="filterSettings"
                     [popupSettings]="{ appendTo: 'component' }" [filterable]="true" class="width"
                     [data]="ddPlaka.f_list" [textField]="ddPlaka.displayField" [valueField]="'AracId'"
-                    (filterChange)="handleFilter($event,'Plaka')" [valuePrimitive]="true" [(ngModel)]="formData.AracId"
+                    (filterChange)="ddPlaka.onChange($event)" [valuePrimitive]="true" [(ngModel)]="formData.AracId"
                     (valueChange)="plakaChange($event)">
                 </kendo-dropdownlist>
 

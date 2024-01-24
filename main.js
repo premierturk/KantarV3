@@ -76,7 +76,12 @@ function onReady() {
         return;
       }
 
-      if (!currMessage.endsWith("\\r") && !currMessage.endsWith("\r")) return;
+      if (
+        !currMessage.endsWith("\\r") && //fake data from hercules
+        !currMessage.endsWith("\r") && //other kantars
+        !currMessage.endsWith("\n") //net kantar
+      )
+        return;
 
       currMessage = currMessage.replaceAll("\\r", "").replaceAll("\r", "");
 
@@ -124,9 +129,19 @@ function dataParser(msg) {
   if (config.kantarMarka == "tartanTarim") {
     return msg.split(" ")[0].replaceAll("WN", "").replaceAll("-", "");
   } else if (config.kantarMarka == "netKantar") {
-    return msg.replaceAll("=", "").replaceAll("(kg)", "");
+    return msg
+      .split("\n")[0]
+      .replaceAll("=", "")
+      .replaceAll(" ", "")
+      .replaceAll("(kg)", "");
   } else if (config.kantarMarka == "ideKantar") {
-    return msg.replaceAll("A", "").replaceAll(" ", "");
+    return msg
+      .replaceAll("A", "")
+      .replaceAll("B", "")
+      .replaceAll("C", "")
+      .replaceAll(" ", "");
+  } else {
+    return msg;
   }
 }
 
@@ -212,30 +227,35 @@ function handleConnection(conn) {
   antenTcp = conn;
   var remoteAddress = conn.remoteAddress + ":" + conn.remotePort;
   console.log("new client connection from %s", remoteAddress);
+  printToAngular("new client connection from %s", remoteAddress);
   conn.on("data", onConnData);
   conn.once("close", onConnClose);
   conn.on("error", onConnError);
 
   var tcpmessages = [];
   function onConnData(d) {
+    printToAngular("on TCP data => " + d);
+
     try {
       var arr = [];
 
       for (let i = 0; i < d.length; i++) arr.push("0x" + d[i].toString(16));
 
       for (var i = 0; i < arr.length - 4; i++) {
-        if (arr[i] == 0x13) {
+        if (arr[i] == 0x51) {
           if (arr.Length < i + 3) return;
           var hex1 = byteToHex(arr[i + 1]);
           var hex2 = byteToHex(arr[i + 2]);
           var hex3 = byteToHex(arr[i + 3]);
 
           var data = parseInt(hex1 + hex2 + hex3, 16);
+          printToAngular("Parsed TCP data => " + data);
           tcpmessages.push(data);
 
           if (tcpmessages.length == 10) {
             let allSame = [...new Set(tcpmessages)].length == 1;
             if (allSame) {
+              printToAngular("TCP MESSAGE => " + tcpmessages[0].toString());
               mainWindow.webContents.send("tcp", tcpmessages[0].toString());
               console.log(data);
               tcpmessages = [];
