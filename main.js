@@ -68,13 +68,8 @@ function onReady() {
     port.on("data", function (data) {
       currMessage += Buffer.from(data).toString();
 
-      console.log("String Data =>" + currMessage);
-      printToAngular("String Data =>" + currMessage);
-
-      if (currMessage.length > 50) {
-        currMessage = "";
-        return;
-      }
+      console.log("First Read =>" + currMessage);
+      printToAngular("First Read =>" + currMessage);
 
       if (
         !currMessage.endsWith("\\r") && //fake data from hercules
@@ -83,9 +78,26 @@ function onReady() {
       )
         return;
 
+
+      if (config.kantarMarka == "tamTarti" && !currMessage.includes("\r")) return;
+
+      console.log("Completed Msg =>" + currMessage);
+      printToAngular("Completed Msg =>" + currMessage);
+
       currMessage = currMessage.replaceAll("\\r", "").replaceAll("\r", "");
 
+      if (currMessage.length > 50) {
+        currMessage = "";
+        return;
+      }
+
+      console.log("Before Parser =>" + currMessage);
+      printToAngular("Before Parser =>" + currMessage);
+
       currMessage = dataParser(currMessage); //parse kantar data
+
+      console.log("After Parser =>" + currMessage);
+      printToAngular("After Parser =>" + currMessage);
 
       messages.push(currMessage);
 
@@ -140,7 +152,12 @@ function dataParser(msg) {
       .replaceAll("B", "")
       .replaceAll("C", "")
       .replaceAll(" ", "");
-  } else {
+  } else if (config.kantarMarka == "tamTarti") {
+    var str = msg.split(" ")[0];
+    var data = str.substring(str.length - 6);
+    return data;
+  }
+  else {
     return msg;
   }
 }
@@ -233,20 +250,20 @@ function handleConnection(conn) {
   conn.on("error", onConnError);
 
   var tcpmessages = [];
+  var arr = [];
+
   function onConnData(d) {
-    printToAngular("on TCP data => " + d);
 
     try {
-      var arr = [];
-
       for (let i = 0; i < d.length; i++) arr.push("0x" + d[i].toString(16));
-
+      if (!arr.includes('0x51')) return;
       for (var i = 0; i < arr.length - 4; i++) {
         if (arr[i] == 0x51) {
           if (arr.Length < i + 3) return;
           var hex1 = byteToHex(arr[i + 1]);
           var hex2 = byteToHex(arr[i + 2]);
           var hex3 = byteToHex(arr[i + 3]);
+          arr = [];
 
           var data = parseInt(hex1 + hex2 + hex3, 16);
           printToAngular("Parsed TCP data => " + data);

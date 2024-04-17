@@ -62,5 +62,20 @@
       "dataBits": 8,
       "parity": "none"
     }
+  },"aydogdu": {
+    "kantarId": 1,
+    "depolamaAlanId": 356,
+    "kantarAdi": "AYDOĞDU TİCARET",
+    "kantarMarka": "tamTarti",
+    "kantar": true,
+    "printerName": "EPSON LX-350",
+    "isPrinterOn": false,
+    "serialPort": {
+      "path": "COM4",
+      "autoOpen": false,
+      "baudRate": 9600,
+      "dataBits": 8,
+      "parity": "even"
+    }
   }
 }
