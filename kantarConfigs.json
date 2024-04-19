@@ -62,7 +62,8 @@
       "dataBits": 8,
       "parity": "none"
     }
-  },"aydogdu": {
+  },
+  "aydogdu": {
     "kantarId": 1,
     "depolamaAlanId": 356,
     "kantarAdi": "AYDOĞDU TİCARET",
@@ -76,6 +77,22 @@
       "baudRate": 9600,
       "dataBits": 8,
       "parity": "even"
+    }
+  },
+  "aliaga": {
+    "kantarId": 1,
+    "depolamaAlanId": 356,
+    "kantarAdi": "Ali Ağa Petrol A.Ş.",
+    "kantarMarka": "tunayKantar",
+    "kantar": true,
+    "printerName": "EPSON LX-350",
+    "isPrinterOn": false,
+    "serialPort": {
+      "path": "COM3",
+      "autoOpen": false,
+      "baudRate": 9600,
+      "dataBits": 8,
+      "parity": "none"
     }
   }
 }

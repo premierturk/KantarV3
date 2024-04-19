@@ -156,6 +156,8 @@ function dataParser(msg) {
     var str = msg.split(" ")[0];
     var data = str.substring(str.length - 6);
     return data;
+  } else if (config.kantarMarka == "tunayKantar") {
+    return msg.replaceAll("\u0002", "");
   }
   else {
     return msg;
