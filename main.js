@@ -183,9 +183,6 @@ ipcMain.on("onprint", async (event, data) => {
   try {
     printToAngular("ONPRİNT");
     data = data[0];
-    if (data.IslemTarihi != null)
-      data.IslemTarihi = moment(data.IslemTarihi).format("DD.MM.yyyy HH:mm");
-    else data.IslemTarihi = "";
 
     printToAngular(data);
     var fisTxt = fs.readFileSync(AppFiles.tempTxt, "utf-8");

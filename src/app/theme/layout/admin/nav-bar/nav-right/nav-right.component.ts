@@ -30,23 +30,23 @@ import { Router } from '@angular/router';
     ])
   ]
 })
-export class NavRightComponent implements OnInit, DoCheck { 
+export class NavRightComponent implements OnInit, DoCheck {
   public gradientConfig: any;
-  public nameLastName:string;
+  public nameLastName: string;
   constructor(
     private router: Router,
-  ) { 
+  ) {
     this.gradientConfig = GradientConfig.config;
   }
 
-  ngOnInit() { 
-    this.nameLastName=JSON.parse(localStorage.getItem("user")).Name;
+  ngOnInit() {
+    this.nameLastName = JSON.parse(localStorage.getItem("user")).namelastname;
   }
 
   cikis() {
     localStorage.removeItem("user");
     this.router.navigate(["/giris"]);
-  } 
+  }
 
   ngDoCheck() {
     if (document.querySelector('body').classList.contains('elite-rtl')) {

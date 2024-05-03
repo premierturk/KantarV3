@@ -57,14 +57,14 @@ export class DataSource {
     }
   }
 
-  async getNoMess(url: string) {
-    try {
-      const resp = await httpClient.get(url);
-      return resp.data;
-    } catch (err) {
-      return err;
-    }
-  }
+  // async getNoMess(url: string) {
+  //   try {
+  //     const resp = await httpClient.get(url);
+  //     return resp.data;
+  //   } catch (err) {
+  //     return err;
+  //   }
+  // }
 
   async post(url: string, data: any) {
     if (AppNetworkStatus.isOffline) return this.offlinePost(url, data);
@@ -98,23 +98,23 @@ export class DataSource {
     }
   }
 
-  async put(url: string, data: any) {
-    if (AppNetworkStatus.isOffline) return this.offlinePut(url, data);
-    try {
-      var success = false;
-      const resp = await httpClient.put(url, data);
-      if (resp.status == 200) {
-        success = true;
-        Notiflix.Notify.success('Başarılı');
-      } else {
-        Notiflix.Notify.failure(resp.data.toString());
-      }
-      return { success: success, data: resp.data };
-    } catch (err) {
-      this.handleErrorResponse(err);
-      return { success: false };
-    }
-  }
+  // async put(url: string, data: any) {
+  //   if (AppNetworkStatus.isOffline) return this.offlinePut(url, data);
+  //   try {
+  //     var success = false;
+  //     const resp = await httpClient.put(url, data);
+  //     if (resp.status == 200) {
+  //       success = true;
+  //       Notiflix.Notify.success('Başarılı');
+  //     } else {
+  //       Notiflix.Notify.failure(resp.data.toString());
+  //     }
+  //     return { success: success, data: resp.data };
+  //   } catch (err) {
+  //     this.handleErrorResponse(err);
+  //     return { success: false };
+  //   }
+  // }
 
   async putNoMess(url: string, data: any) {
     try {
@@ -130,21 +130,21 @@ export class DataSource {
     }
   }
 
-  async delete(url: string) {
-    try {
-      const resp = await httpClient.delete(url);
-      if (resp.status == 200) {
-        Notiflix.Notify.success('Başarılı');
-      } else {
-        Notiflix.Notify.failure(resp.data.toString());
-      }
+  // async delete(url: string) {
+  //   try {
+  //     const resp = await httpClient.delete(url);
+  //     if (resp.status == 200) {
+  //       Notiflix.Notify.success('Başarılı');
+  //     } else {
+  //       Notiflix.Notify.failure(resp.data.toString());
+  //     }
 
-      return resp.data;
-    } catch (err) {
-      this.handleErrorResponse(err);
-      return err;
-    }
-  }
+  //     return resp.data;
+  //   } catch (err) {
+  //     this.handleErrorResponse(err);
+  //     return err;
+  //   }
+  // }
 
   async offlinePost(url: string, data: any) {
     try {
@@ -155,35 +155,27 @@ export class DataSource {
       window.localStorage.setItem("offlineRequests", JSON.stringify(requestList));
 
 
-      if (url.includes("api/KantarV3")) {
+      if (url.includes("/kantar/hafriyatkabul/KabulBelgesi")) {
         //print işlemi için donulecek data 
-        const arac = JSON.parse(window.localStorage.getItem("AracList")).find(a => a.AracId == data.AracId);
-        // const malzeme = JSON.parse(window.localStorage.getItem("MalzemeTuruList")).find(a => a.MalzemeTuruId == data.MalzemeTipiId);
-        // const tasOcagi = JSON.parse(window.localStorage.getItem("TasOcaklariMini")).find(a => a.TasOcagiId == data.TasOcagiId);
-        // const projeAlani = JSON.parse(window.localStorage.getItem("ProjeAlanlari")).find(a => a.ProjeAlanId == data.ProjeAlaniId);
+        const arac = JSON.parse(window.localStorage.getItem("araclistesi")).find(a => a.AracId == data.AracId);
         const kantarAdi = window.localStorage.getItem("KantarAdi");
-        const user = JSON.parse(window.localStorage.getItem("user"));
 
         const fisData = {
-          TartiNo: null,
+          KantarAdi: kantarAdi,
+          HafriyatDokumId: null,
+          BelgeNo: data.BelgeNo,
           PlakaNo: arac.PlakaNo,
-          TartiTarih: moment(new Date()).toISOString(),
-          TarihSaat: moment(new Date()).toISOString(),
-          // MalzemeAdi: malzeme.MalzemeTuru,
+          IslemTarihi: moment(new Date()).format("DD.MM.yyyy HH:mm"),
           FirmaAdi: arac.FirmaAdi,
-          // GeldigiYer: tasOcagi.Adi,
-          // GittigiYer: projeAlani.AlanAdi,
-          KantarName: kantarAdi,
-          TartiMemuru: user.Name,
           Dara: arac.Dara,
           Tonaj: data.Tonaj,
           NetTonaj: data.Tonaj - arac.Dara
         };
 
         //localdeki dokum listesini guncelleme
-        var dokumList = JSON.parse(window.localStorage.getItem("KantarListV4"));
+        var dokumList = JSON.parse(window.localStorage.getItem("GetRaporMulti"));
 
-        if (dokumList.some(dokum => dokum.PlakaNo == arac.PlakaNo && moment(new Date()).diff(dokum.TartiTarih, 'minutes') < 10)) {
+        if (dokumList.some(dokum => dokum.PlakaNo == arac.PlakaNo && moment(new Date()).diff(dokum.IslemTarihi, 'minutes') < 10)) {
           requestList.pop();
           window.localStorage.setItem("offlineRequests", JSON.stringify(requestList));
           Notiflix.Notify.failure("Tekrarlayan Geçiş.");
@@ -198,18 +190,17 @@ export class DataSource {
 
         dokumList.push(fullData);
         dokumList = dokumList.sort(function (a, b) {
-          return new Date(b.TartiTarih).getTime() - new Date(a.TartiTarih).getTime();
+          return new Date(b.IslemTarihi).getTime() - new Date(a.IslemTarihi).getTime();
         });
-        window.localStorage.setItem("KantarListV4", JSON.stringify(dokumList));
+        window.localStorage.setItem("GetRaporMulti", JSON.stringify(dokumList));
 
         return { success: true, data: fisData };
-      } else if (url.includes("api/Kantar/Dara")) {
+      } else if (url.includes("kantar/DaraDegisimi")) {
         //localdeki arac listesini guncelleme
-        var aracList = JSON.parse(window.localStorage.getItem("AracList"));
+        var aracList = JSON.parse(window.localStorage.getItem("araclistesi"));
         var index = aracList.findIndex(a => a.AracId == data.AracId);
         aracList[index].Dara = data.Dara;
-        aracList[index].DaraGuncellemeTarihi = moment(new Date()).toISOString();
-        window.localStorage.setItem("AracList", JSON.stringify(aracList));
+        window.localStorage.setItem("araclistesi", JSON.stringify(aracList));
       }
 
       return { success: true, data: data };
@@ -219,38 +210,38 @@ export class DataSource {
     }
   }
 
-  async offlinePut(url: string, data: any) {
-    try {
-      //offline requestlere eklenmesi
-      var requestList = JSON.parse(window.localStorage.getItem("offlineRequests"));
-      if (requestList == null) requestList = [];
-      requestList.push({ url: url, data: data, type: "PUT" });
-      window.localStorage.setItem("offlineRequests", JSON.stringify(requestList));
+  // async offlinePut(url: string, data: any) {
+  //   try {
+  //     //offline requestlere eklenmesi
+  //     var requestList = JSON.parse(window.localStorage.getItem("offlineRequests"));
+  //     if (requestList == null) requestList = [];
+  //     requestList.push({ url: url, data: data, type: "PUT" });
+  //     window.localStorage.setItem("offlineRequests", JSON.stringify(requestList));
 
-      if (url.includes("api/Kantar")) {
-        const malzeme = JSON.parse(window.localStorage.getItem("MalzemeTuruList")).find(a => a.MalzemeTuruId == data.MalzemeTipiId);
-        const tasOcagi = JSON.parse(window.localStorage.getItem("TasOcaklariMini")).find(a => a.TasOcagiId == data.TasOcagiId);
-        const projeAlani = JSON.parse(window.localStorage.getItem("ProjeAlanlari")).find(a => a.ProjeAlanId == data.ProjeAlaniId);
+  //     if (url.includes("api/Kantar")) {
+  //       const malzeme = JSON.parse(window.localStorage.getItem("MalzemeTuruList")).find(a => a.MalzemeTuruId == data.MalzemeTipiId);
+  //       const tasOcagi = JSON.parse(window.localStorage.getItem("TasOcaklariMini")).find(a => a.TasOcagiId == data.TasOcagiId);
+  //       const projeAlani = JSON.parse(window.localStorage.getItem("ProjeAlanlari")).find(a => a.ProjeAlanId == data.ProjeAlaniId);
 
-        //localdeki dokum listesini guncelleme
-        var dokumList = JSON.parse(window.localStorage.getItem("KantarListV4"));
-        var index = dokumList.findIndex(a => a.TartiNo == data.TartiNo)
-        dokumList[index].TasOcagiId = data.TasOcagiId;
-        dokumList[index].GeldigiYer = tasOcagi.Adi;
-        dokumList[index].ProjeAlaniId = data.ProjeAlaniId;
-        dokumList[index].GittigiYer = projeAlani.AlanAdi;
-        dokumList[index].MalzemeTipiId = data.MalzemeTipiId;
-        dokumList[index].MalzemeAdi = malzeme.MalzemeTuru;
-        window.localStorage.setItem("KantarListV4", JSON.stringify(dokumList));
-      }
-      return { success: true, data: data };
-    } catch (error) {
-      Notiflix.Notify.failure(error);
-      return { success: false };
-    }
+  //       //localdeki dokum listesini guncelleme
+  //       var dokumList = JSON.parse(window.localStorage.getItem("KantarListV4"));
+  //       var index = dokumList.findIndex(a => a.TartiNo == data.TartiNo)
+  //       dokumList[index].TasOcagiId = data.TasOcagiId;
+  //       dokumList[index].GeldigiYer = tasOcagi.Adi;
+  //       dokumList[index].ProjeAlaniId = data.ProjeAlaniId;
+  //       dokumList[index].GittigiYer = projeAlani.AlanAdi;
+  //       dokumList[index].MalzemeTipiId = data.MalzemeTipiId;
+  //       dokumList[index].MalzemeAdi = malzeme.MalzemeTuru;
+  //       window.localStorage.setItem("KantarListV4", JSON.stringify(dokumList));
+  //     }
+  //     return { success: true, data: data };
+  //   } catch (error) {
+  //     Notiflix.Notify.failure(error);
+  //     return { success: false };
+  //   }
 
 
-  }
+  // }
 
   handleErrorResponse(error: any) {
     if (error.response && error.response.status) {

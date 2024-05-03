@@ -1,9 +1,9 @@
 {
-  "/apilocal": {
+  "/api": {
     "target": "http://10.210.210.95:2024/HYS.WebApi",
     "secure": false
   },
-  "/api": {
+  "/apilocal": {
     "target": "https://hybstest.izmir.bel.tr//HYS.WebApi",
     "secure": false
   }

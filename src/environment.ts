@@ -1,7 +1,5 @@
 export const environment = {
-  production: true,   // npm run electron serve de false olacak
-  apiUrl: 'https://hybs.izmir.bel.tr/HYS.WebApi/api',
-  url: 'https://hybs.izmir.bel.tr'
-  //apiUrl: 'http://10.210.210.95:2024/HYS.WebApi/api',
-  //url: 'http://10.210.210.95:2024'
+  production: false,   // npm run electron serve de false olacak
+  apiUrl: 'http://10.210.210.95:2024/HYS.WebApi/api',
+  url: 'http://10.210.210.95:2024'
 };

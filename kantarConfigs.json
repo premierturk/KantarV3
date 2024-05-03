@@ -5,10 +5,10 @@
     "kantarAdi": "DEBUG Kantar",
     "kantarMarka": "tartanTarim",
     "kantar": true,
-    "printerName": "EPSON LX-350",
-    "isPrinterOn": false,
+    "printerName": "SEC001599D4A36B",
+    "isPrinterOn": true,
     "serialPort": {
-      "path": "COM14",
+      "path": "COM4",
       "autoOpen": false,
       "baudRate": 9600,
       "dataBits": 8,

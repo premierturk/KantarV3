@@ -81,7 +81,7 @@ export class DashboardComponent implements OnInit {
   }
 
   public async belgeNoFromBarcode(code) {
-    var barkodBelge = code.replaceAll('Shift', '').replaceAll('Control', '').replaceAll('/', '-').replaceAll('*', '-').replaceAll(',000026', '');
+    var barkodBelge = this.getBelgeNo(code);
     //this.formData.BelgeNo = barkodBelge;
     var tasimaKabulKontrol = this.tasimaKabulListesi.filter(x => x.BelgeNo == barkodBelge)[0];
 
@@ -96,13 +96,28 @@ export class DashboardComponent implements OnInit {
       //   this.save();
       // }, 3000);
 
-      return barkodBelge;
+      // return barkodBelge;
 
     }
     else {
       this.formData.FirmaAdi = '';
       //Notiflix.Notify.failure('Geçersiz Belge No!');
     }
+  }
+  getBelgeNo(readed: any) {
+    var index = readed.indexOf("-");
+    if (index < 0) return "";
+
+    var left = "";
+    for (let i = index - 1; i >= 0; i--) {
+      const c = readed[i];
+      if (c >= '0' && c <= '9') left = c + left;
+      else break; //2
+    }
+
+    var right = readed.substring(index, index + 5);//-2023
+
+    return left + right;
   }
 
   public plakaChange(aracId) {
@@ -173,11 +188,48 @@ export class DashboardComponent implements OnInit {
   }
 
 
-  public print(data) {
+  public responseToPrint(data) {
     if (data == null) return;
 
+    var print = data; //offline request response
+
+    if (data.fisno!) { //web service response
+      print = {
+        KantarAdi: window.localStorage.getItem("KantarAdi"),
+        HafriyatDokumId: data.fisno,
+        BelgeNo: data.belgeno,
+        PlakaNo: data.plakano,
+        IslemTarihi: data.islemtarihi + " " + data.islemsaat,
+        FirmaAdi: data.firma,
+        Dara: data.dara,
+        Tonaj: data.tonaj,
+        NetTonaj: data.net,
+      }
+    }
+
+
     if (this._electronService.ipcRenderer)
-      this._electronService.ipcRenderer.send('onprint', [data]);
+      this._electronService.ipcRenderer.send('onprint', [print]);
+
+    this.clearSelections();
+  }
+
+  public gridToPrint(data) {
+    if (data == null) return;
+
+    var print = {
+      KantarAdi: window.localStorage.getItem("KantarAdi"),
+      HafriyatDokumId: data.HafriyatDokumId,
+      BelgeNo: data.BelgeNo,
+      PlakaNo: data.PlakaNo,
+      IslemTarihi: moment(new Date(data.IslemTarihi)).format("DD.MM.yyyy HH:mm"),
+      FirmaAdi: data.FirmaAdi,
+      Dara: data.Dara,
+      Tonaj: data.Tonaj + data.Dara,
+      NetTonaj: data.Tonaj,
+    };
+    if (this._electronService.ipcRenderer)
+      this._electronService.ipcRenderer.send('onprint', [print]);
 
     this.clearSelections();
   }
@@ -246,7 +298,6 @@ export class DashboardComponent implements OnInit {
 
     var err = this.validations();
     if (err != '') {
-
       Notiflix.Notify.failure(err);
       return;
     }
@@ -257,7 +308,7 @@ export class DashboardComponent implements OnInit {
       if (result.success) {
         if (this._electronService.ipcRenderer)
           this._electronService.ipcRenderer.send('bariyer');
-        this.print(result.data);
+        this.responseToPrint(result.data);
         this.initializeFormData();
         this.BindGrid();
       }
@@ -275,6 +326,7 @@ export class DashboardComponent implements OnInit {
     else if (this.formData.Tonaj < this.formData.Dara && this.formData.Tonaj > 1) s = 'Dara Tonajdan büyük olamaz.';
     return s;
   }
+
   public filterSettings: DropDownFilterSettings = {
     caseSensitive: false,
     operator: "startsWith",
@@ -299,7 +351,6 @@ export class DashboardComponent implements OnInit {
     }
 
   }
-
 }
 
 
@@ -321,6 +372,5 @@ class DropdownProps {
 
 
 }
-
 
 
