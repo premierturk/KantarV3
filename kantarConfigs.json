@@ -33,12 +33,12 @@
   },
   "eminOgullari": {
     "kantarId": 1,
-    "depolamaAlanId": 198,
+    "depolamaAlanId": 353,
     "kantarAdi": "EMİNOĞULLARI HAFRİYAT GERİ DÖNÜŞÜM",
     "kantarMarka": "netKantar",
     "kantar": true,
-    "printerName": "",
-    "isPrinterOn": false,
+    "printerName": "EPSON LX-350 ESC/P",
+    "isPrinterOn": true,
     "serialPort": {
       "path": "COM2",
       "autoOpen": false,
