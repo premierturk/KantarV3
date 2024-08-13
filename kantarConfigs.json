@@ -53,8 +53,8 @@
     "kantarAdi": "ÖZEN-TAŞ HAFRİYAT",
     "kantarMarka": "ideKantar",
     "kantar": true,
-    "printerName": "EPSON LX-350",
-    "isPrinterOn": false,
+    "printerName": "EPSON LX-350 ESC/P",
+    "isPrinterOn": true,
     "serialPort": {
       "path": "COM1",
       "autoOpen": false,
