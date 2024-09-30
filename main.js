@@ -138,8 +138,8 @@ function onReady() {
 }
 
 function dataParser(msg) {
-  if (config.kantarMarka == "tartanTarim") {
-    return msg.split(" ")[0].replaceAll("WN", "").replaceAll("-", "");
+  if (config.kantarMarka == "tartanTarti") {
+    return msg.split(" ")[0].replaceAll("WG", "").replaceAll("-", "");
   } else if (config.kantarMarka == "netKantar") {
     return msg
       .split("\n")[0]
