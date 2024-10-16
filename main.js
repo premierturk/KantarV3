@@ -101,7 +101,7 @@ function onReady() {
 
       messages.push(currMessage);
 
-      if (messages.length == 5) {
+      if (messages.length == 5 || config.depolamaAlanId == 354) { //özentaş mesajı cok yavaş basıyor
         let allSame = [...new Set(messages)].length == 1;
         if (allSame) {
           mainWindow.webContents.send("kantar", [messages[0]]);
@@ -151,6 +151,7 @@ function dataParser(msg) {
       .replaceAll("A", "")
       .replaceAll("B", "")
       .replaceAll("C", "")
+      .replaceAll("-", "")
       .replaceAll(" ", "");
   } else if (config.kantarMarka == "tamTarti") {
     var str = msg.split(" ")[0];

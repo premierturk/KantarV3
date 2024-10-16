@@ -49,14 +49,14 @@
   },
   "ozenTas": {
     "kantarId": 1,
-    "depolamaAlanId": 85,
+    "depolamaAlanId": 354,
     "kantarAdi": "ÖZEN-TAŞ HAFRİYAT",
     "kantarMarka": "ideKantar",
     "kantar": true,
-    "printerName": "EPSON LX-350 ESC/P",
+    "printerName": "EPSON LX-350",
     "isPrinterOn": true,
     "serialPort": {
-      "path": "COM1",
+      "path": "COM3",
       "autoOpen": false,
       "baudRate": 9600,
       "dataBits": 8,
