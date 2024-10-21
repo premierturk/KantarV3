@@ -17,12 +17,12 @@
   },
   "sunay": {
     "kantarId": 1,
-    "depolamaAlanId": 1,
+    "depolamaAlanId": 258,
     "kantarAdi": "Özcan SUNAY",
     "kantarMarka": "tartanTarti",
     "kantar": true,
-    "printerName": "",
-    "isPrinterOn": false,
+    "printerName": "rongta",
+    "isPrinterOn": true,
     "serialPort": {
       "path": "COM3",
       "autoOpen": false,
