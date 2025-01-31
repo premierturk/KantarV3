@@ -159,6 +159,13 @@ function dataParser(msg) {
     return data;
   } else if (config.kantarMarka == "tunayKantar") {
     return msg.replaceAll("\u0002", "");
+  } else if (config.kantarMarka == "taralsa") {
+    return msg
+      .replaceAll("A", "")
+      .replaceAll("B", "")
+      .replaceAll("C", "")
+      .replaceAll("-", "")
+      .replaceAll(" ", "");
   }
   else {
     return msg;

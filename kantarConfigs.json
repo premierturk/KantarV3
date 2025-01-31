@@ -110,5 +110,21 @@
       "dataBits": 8,
       "parity": "even"
     }
+  },
+  "harmandali": {
+    "kantarId": 1,
+    "depolamaAlanId": 24,
+    "kantarAdi": "Harmandalı",
+    "kantarMarka": "taralsa",
+    "kantar": true,
+    "printerName": "Lexmark Forms Printer 2580 (Kopya 1)",
+    "isPrinterOn": true,
+    "serialPort": {
+      "path": "COM2",
+      "autoOpen": false,
+      "baudRate": 9600,
+      "dataBits": 8,
+      "parity": "none"
+    }
   }
 }
